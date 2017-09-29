@@ -27,11 +27,15 @@
         <th>Total Items</th>
         <th>Total Unique Products</th>
     </tr>
-    <% var noww = moment.utc() ;var start = moment.utc().startOf('day'); var end = moment.utc().startOf('day').add(1, 'days'); %>
+    <% var noww = moment.utc() ;var start = moment.utc().startOf('day').add(1, 'hours'); var end = moment.utc().startOf('day').add(1, 'days'); %>
     <% var start2 = moment.parseZone().startOf('day'); var end2 = moment.parseZone().startOf('day').add(1, 'days'); var noww2 = moment.parseZone();%>
-    <p>start <%= start %></p>
-    <p>end <%= end %></p>
-    <p>now <%= noww %></p>
+    <% var d = new Date(); %>
+    <p>start <%= Date(start) %></p>
+    <p>end <%= Date(end) %></p>
+    <p>now <%= Date(noww) %></p>    
+    <p>start <%= Date(start2) %></p>
+    <p>end <%= Date(end2) %></p>
+    <p>now <%= Date(noww2) %></p>
     <p>start <%= start2 %></p>
     <p>end <%= end2 %></p>
     <p>now <%= noww2 %></p>
@@ -39,8 +43,11 @@
 
     <% orders.forEach(function(order){%>
         <% order.products.forEach(function(prod){%>
-            <% var order_d = moment.utc(order.order_date).add(479, 'minutes'); 
-                if(   order_d >= start && order_d < end   ) { %>
+            <%  
+            var start = new Date();start.setHours(0,0,0,0); var end = new Date(); end.setHours(23,59,59,999); 
+            var ord_d = order.order_date.setTime(order.order_date.getTime() + (8*60*60*1000)); 
+            if( ord_d >= start && ord_d < end){
+            %>
                 <tr class="success">
             <% }else{ %>
                 <tr>
