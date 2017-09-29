@@ -32,7 +32,7 @@
 
     <% orders.forEach(function(order){%>
         <% order.products.forEach(function(prod){%>
-            <% var order_d = moment.utc(order.order_date).add(479, 'minutes'); var start = moment().startOf('day'); var end = moment().startOf('day').add(1, 'days');
+            <% var order_d = moment.parseZone(order.order_date).add(479, 'minutes'); var start = moment().startOf('day'); var end = moment().startOf('day').add(1, 'days');
                 if(   order_d >= start && order_d < end   ) { %>
                 <tr class="success">
             <% }else{ %>
@@ -40,6 +40,7 @@
             <% } %>
                 <% loopcount = loopcount +1;%>
                 <td><%= loopcount %></td>
+                <td><%= order.order_date%></td>
                 <td><%= moment(order.order_date).format('llll') %></td>
                 <td><%= order.billing_full_name %></td>
                 <td><%= order.billing_email %></td>
