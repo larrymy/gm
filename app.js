@@ -13,7 +13,7 @@ var express     = require("express"),
     // seedDB      = require("./seeds")
     
 //requiring routes
-var orderRoutes    = require("./routes/orders");
+var orderRoutes    = require("./routes/index");
 
     // campgroundRoutes = require("./routes/campgrounds"),
     // indexRoutes      = require("./routes/index")
@@ -60,7 +60,7 @@ app.use(function(req, res, next){
 
 // app.use("/", indexRoutes);
 // app.use("/campgrounds", campgroundRoutes);
-require("./upload.js")(app);
+require("./routes/upload.js")(app);
 app.use("/", orderRoutes);
 // app.use("/campgrounds/:id/comments", commentRoutes);
 

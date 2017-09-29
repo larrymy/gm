@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
-var Upload = require("./models/upload.js");
-var Ord = require("./models/order2.js");
+var Upload = require("../models/upload.js");
+var Ord = require("../models/order.js");
 
 module.exports = function(app){
 	var multer = require("multer");

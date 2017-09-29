@@ -1,60 +1,78 @@
 var express = require("express");
 var router  = express.Router();
-var passport = require("passport");
-var User = require("../models/user");
 
-//root route
-router.get("/", function(req, res){
-    res.render("landing");
+var mongoose = require("mongoose");
+
+var Supplier = require("../models/supplier");
+var Upload = require("../models/upload.js");
+var Ord = require("../models/order.js");
+// var middleware = require("../middleware");
+var moment = require("moment");
+var async = require("async");
+
+router.get("/", function(req,res){
+	res.redirect("/admin_upload_json");
+})
+
+router.get("/admin_upload_json", function(req, res){
+	res.render("./upload_json.ejs", {moment:moment});
+})
+
+
+router.get("/login", function(req,res){
+	res.render("login");
+})
+
+
+router.get("/admin_orders", function(req,res){
+
+	Upload.findOne().sort({date_created:-1}).exec(function(err,post){
+
+		var fs=require('fs');
+		var data=fs.readFileSync(post.path);
+		var words=JSON.parse(data);
+		// res.send(words);
+		Ord.find({}).remove().exec(function(err,done){});
+
+		Ord.create(words, function(err, data2){
+			// res.send(data2);
+			res.render("admin_orders.ejs", {orders: data2});
+		})
+	})
+})
+
+router.get("/admin_suppliers", function(req, res){
+	Supplier.find({}, function(err, allsupp){
+		res.render("./supplier_list.ejs", {suppliers: allsupp});
+	})
+})
+
+router.get("/supplier/:id", function(req, res){
+
+	Upload.findOne().sort({date_created:-1}).exec(function(err,post){
+
+		var fs=require('fs');
+		var data=fs.readFileSync(post.path);
+		var words=JSON.parse(data);
+		// res.send(words);
+		Ord.find({}).remove().exec(function(err,done){});
+
+		Supplier.findById(req.params.id, function(err, supp){
+			console.log(supp);
+			Ord.create(words, function(err, data2){
+				res.render("./supplier_orders.ejs", {orders: data2, supp: supp, moment: moment });
+			})
+		})	
+	})
+})
+
+router.get("/admin_uploads", function(req,res){
+	Upload.find({}, function(err, ups){
+		res.render("upload_list.ejs", {uploads: ups, moment: moment});
+	})
 });
-
-// show register form
-router.get("/register", function(req, res){
-   res.render("register"); 
-});
-
-//handle sign up logic
-router.post("/register", function(req, res){
-    var newUser = new User({username: req.body.username});
-    User.register(newUser, req.body.password, function(err, user){
-        if(err){
-            console.log(err);
-            req.flash("error", err.message);
-            res.redirect ("/register");
-        }
-        passport.authenticate("local")(req, res, function(){
-            req.flash("success", "Welcome to YelpCamp " + user.username);
-           res.redirect("/campgrounds"); 
-        });
-    });
-});
-
-//show login form
-router.get("/login", function(req, res){
-   res.render("login"); 
-});
-
-//handling login logic
-router.post("/login", passport.authenticate("local", 
-    {
-        successRedirect: "/campgrounds",
-        failureRedirect: "/login"
-    }), function(req, res){
-});
-
-// logout route
-router.get("/logout", function(req, res){
-    req.logout();
-    req.flash("success", "See you next time ...");
-    res.redirect("/campgrounds");
-});
-
-//middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
 
 module.exports = router;
+
+
+
