@@ -3,6 +3,8 @@ var router  = express.Router();
 
 var mongoose = require("mongoose");
 
+// var underscore = require("../public/script/underscore.js");
+
 var Supplier = require("../models/supplier");
 var Upload = require("../models/upload.js");
 var Order = require("../models/order.js");
@@ -31,7 +33,7 @@ router.get("/admin_orders", function(req,res){
 			res.redirect("/admin_upload_json");
 		}
 		
-		Order.find({},function(err,data2){
+		Order.find({}).sort({order_date: -1}).exec(function(err,data2){
 			res.render("admin_orders.ejs", {orders: data2, moment: moment});
 		})	
 		
@@ -49,7 +51,7 @@ router.get("/supplier/:id", function(req, res){
 	Upload.findOne().sort({date_created:-1}).exec(function(err,post){
 		Supplier.findById(req.params.id, function(err, supp){
 			// console.log(supp);
-			Order.find({}, function(err, data2){
+			Order.find({}).sort({order_date: -1}).exec(function(err,data2){
 				res.render("./supplier_orders.ejs", { orders: data2, supp: supp, moment: moment });
 			})
 		})	

@@ -31,7 +31,9 @@
     <% orders.forEach(function(order){%>
         <% order.products.forEach(function(prod){%>
             <% if(prod.category.match(supp.name)){ %>
-                <% var inputDate = new Date(order.order_date); var todaysDate = new Date(); if(inputDate.setHours(0,0,0,0) == todaysDate.setHours(0,0,0,0)) { %>
+                <% var order_d = moment.parseZone(order.order_date).add(479, 'minutes'); 
+                    var start = moment().startOf('day'); var end = moment().startOf('day').add(1, 'days');
+                if(   order_d >= start && order_d < end   ) { %>
                     <tr class="success">
                 <% }else{ %>
                     <tr>
