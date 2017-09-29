@@ -1,0 +1,26 @@
+<% include ./partials/header %>
+
+<div class="page-header">
+  <h1>Supplier List (ADMIN) </h1>
+</div>
+
+
+
+<table class="table table-bordered">
+    <tr>
+        <th>Supplier Name</th>
+        <th>Supplier ID</th>
+    </tr>
+
+
+    <% suppliers.forEach(function(supp){ %>
+
+        <tr>
+            <td><a " href="/supplier/<%= supp._id %>"><%= supp.name %></a></td>
+            <td><a " href="/supplier/<%= supp._id %>"><%= supp._id %></a></td>        
+        </tr>
+
+    <% }) %>
+</table>
+
+<% include ./partials/footer %>

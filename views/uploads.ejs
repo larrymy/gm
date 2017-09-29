@@ -1,0 +1,40 @@
+<% include ./partials/header %>
+
+<div class="page-header">
+  <h1>Uploads (ADMIN)</h1>
+</div>
+
+<table id="example" class="table table-striped table-hover" data-toggle="table"  data-show-toggle="true">
+    <tr>
+        <th>Original Name</th>
+        <th>File Name</th>
+        
+        <th>Extension</th>
+        <th>Size</th>
+        <th>Date Created</th>  
+        <th>Path</th>  
+        <!-- <th>Delete</th>     -->
+    </tr>
+
+    
+    <% uploads.sort(function(a,b){return new Date(b.date_created) - new Date(a.date_created)}).forEach(function(up){ %>
+        <tr>
+            <td><%=up.originalname %></td>
+            <td><%=up.filename %></td>
+            
+            <td><%=up.extension %></td>
+            <td><%=up.size_readable %></td>
+            <td><%=up.date_created %></td>
+            <!-- <td><a href="<%=up.path %>">View</a></td> -->
+
+            <% var qname = moment(up.date_created).format('YYYYMMDD') + "_" + up.originalname;
+                var path2 = "file:" + up.path %>
+            <!-- <td><a href="./uploads/<%=up.filename%>" download="<%= up.originalname %>">Download</a>​​​​​​​​​​​​​​​​​​​​​​​​​​​</td> -->
+            <!-- <td><a href=<%=path2%> download="<%= qname %>">Download</a>​​​​​​​​​​​​​​​​​​​​​​​​​​​</td> -->
+            <!-- <td><a href="/uploads/id">View</a></td> destroy-->
+        </tr>
+    <% }) %>
+</table>
+
+
+<% include ./partials/footer %>
