@@ -5,7 +5,7 @@ var mongoose = require("mongoose");
 
 var Supplier = require("../models/supplier");
 var Upload = require("../models/upload.js");
-var Ord = require("../models/order.js");
+var Order = require("../models/order.js");
 // var middleware = require("../middleware");
 var moment = require("moment");
 var async = require("async");
@@ -30,16 +30,11 @@ router.get("/admin_orders", function(req,res){
 		if(!post){
 			res.redirect("/admin_upload_json");
 		}
-		var fs=require('fs');
-		var data=fs.readFileSync(post.path);
-		var words=JSON.parse(data);
-		// res.send(words);
-		Ord.find({}).remove().exec(function(err,done){});
-
-		Ord.create(words, function(err, data2){
-			// res.send(data2);
-			res.render("admin_orders.ejs", {orders: data2});
-		})
+		
+		Order.find({},function(err,data2){
+			res.render("admin_orders.ejs", {orders: data2, moment: moment});
+		})	
+		
 	})
 })
 
@@ -52,17 +47,10 @@ router.get("/admin_suppliers", function(req, res){
 router.get("/supplier/:id", function(req, res){
 
 	Upload.findOne().sort({date_created:-1}).exec(function(err,post){
-
-		var fs=require('fs');
-		var data=fs.readFileSync(post.path);
-		var words=JSON.parse(data);
-		// res.send(words);
-		Ord.find({}).remove().exec(function(err,done){});
-
 		Supplier.findById(req.params.id, function(err, supp){
-			console.log(supp);
-			Ord.create(words, function(err, data2){
-				res.render("./supplier_orders.ejs", {orders: data2, supp: supp, moment: moment });
+			// console.log(supp);
+			Order.find({}, function(err, data2){
+				res.render("./supplier_orders.ejs", { orders: data2, supp: supp, moment: moment });
 			})
 		})	
 	})

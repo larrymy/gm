@@ -6,6 +6,7 @@
 
 <table id="example" class="table table-striped table-hover" data-toggle="table"  data-show-toggle="true">
     <tr>
+        <th>#</th>
         <th>Order ID</th>
         <th>Date</th>
         
@@ -26,7 +27,7 @@
         <th>Total Items</th>
         <th>Total Unique Products</th>
     </tr>
-
+    <%var loopcount = 0;%>
     <% orders.forEach(function(order){%>
         <% order.products.forEach(function(prod){%>
             <% var inputDate = new Date(order.order_date); var todaysDate = new Date(); if(inputDate.setHours(0,0,0,0) == todaysDate.setHours(0,0,0,0)) { %>
@@ -34,6 +35,8 @@
             <% }else{ %>
                 <tr>
             <% } %>
+                <% loopcount = loopcount +1;%>
+                <td><%= loopcount %></td>
                 <td><%= order.order_number %></td>
                 <td><%= order.order_date %></td>
                 <td><%= order.billing_full_name %></td>

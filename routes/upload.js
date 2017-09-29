@@ -36,26 +36,15 @@ module.exports = function(app){
 
 		myfile.extension = myfile.originalname.split('.').pop().toLowerCase()
 		myfile.size_readable = humanFileSize(myfile.size,true);
-		// var originalname = myfile.originalname;
-		// var filename = myfile.filename;
-		// var path = myfile.path;
-		// var destination = myfile.destination;
-		// var size = myfile.size;
-		// var mimetype = myfile.mimetype;
-		var Papa = require("papaparse");
-		var csv = require('csv-parser')
-		var fs = require('fs')
-		var path = myfile.path;
+	
+		var fs=require('fs');
+		var data=fs.readFileSync(myfile.path);
+		var order_data=JSON.parse(data);
+		// res.send(order_data);
+		Ord.find({}).remove().exec(function(err,done){});
 
-		fs.createReadStream(path)
-		  .pipe(csv())
-		  .on('data', function (data) {
-		  	var h = JSON.stringify(data);
-
-		    Ord.find({}).remove().exec();
-		    Ord.create(JSON.parse(h))
+		Ord.create(order_data, function(err, orders){
 		})
-
 
 		Upload.create(myfile, function(err, newUpload){
 			if(err){
