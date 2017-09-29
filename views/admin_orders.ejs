@@ -28,10 +28,13 @@
         <th>Total Unique Products</th>
     </tr>
     <% var start = moment.utc().startOf('day'); var end = moment.utc().startOf('day').add(1, 'days'); var noww = moment.utc();%>
+    <% var start2 = moment.parseZone().startOf('day'); var end2 = moment.parseZone().startOf('day').add(1, 'days'); var noww2 = moment.parseZone();%>
     <p>start <%= start %></p>
     <p>end <%= end %></p>
     <p>now <%= noww %></p>
-
+    <p>start <%= start2 %></p>
+    <p>end <%= end2 %></p>
+    <p>now <%= noww2 %></p>
     <%var loopcount = 0;%>
 
     <% orders.forEach(function(order){%>
@@ -44,7 +47,8 @@
             <% } %>
                 <% loopcount = loopcount +1;%>
                 <td><%= loopcount %></td>
-                <td><%= order.order_date%></td>
+                <td><%= moment.utc(order.order_date)%></td>
+                <td><%= moment.parseZone(order.order_date)%></td>
                 <td><%= moment(order.order_date).format('llll') %></td>
                 <td><%= order.billing_full_name %></td>
                 <td><%= order.billing_email %></td>
