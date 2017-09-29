@@ -26,7 +26,7 @@ module.exports = function(app){
 	}
 
 	function uploadFile(req, res){
-		if(!req.file){
+		if( !req.file ){
 			req.flash("error", "Please upload an appropriate JSON file.");
 			res.redirect("/admin_upload_json");
 		}

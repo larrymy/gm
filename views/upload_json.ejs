@@ -4,30 +4,23 @@
   <h1>Upload Orders (ADMIN) </h1>
 </div>
 
-<!-- <div class="well">
-    <form action="/" method="post" enctype="multipart/form-data">
-        <input type="file" name="myfile" class="form-control" style="display: none;">
-        <input type="" name="width" value="50%" style="display: none">
-        <input type="" name="widgetId" value="123" style="display: none">
-        <br>
-        <button class="btn btn-block btn-primary">Upload</button>
-    </form>
 
-    <br>
+<script type="text/javascript">
+    $(document).ready(function(){
+      $('form input').change(function () {
+        var extension = this.files[0].name.split('.').pop().toLowerCase();
+        if(extension!="json"){
+            // alert("json file only!");
+            $(this).val('');
+            // alert(this);
+            location.reload();
+        }
+        $('form p').text((this.files[0].name)).addClass("selectedfiles");
+      });
+    }); 
+</script>
 
-    <form class="box" method="post" action="/" enctype="multipart/form-data">
-      <div class="box__input">
-        <input class="box__file" type="file" name="myfile" id="file" data-multiple-caption="{count} files selected" multiple />
-        <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
-        <button class="box__button" type="submit">Upload</button>
-      </div>
-      <div class="box__uploading">Uploading&hellip;</div>
-      <div class="box__success">Done!</div>
-      <div class="box__error">Error! <span></span>.</div>
-    </form>
 
-</div>
- -->
 <form class="formA" method="post" action="/uploads" enctype="multipart/form-data">
   <!-- <input class="formC" type="file" name="myfile" multiple> -->
   <input class="formC" type="file" name="myfile">
@@ -37,17 +30,6 @@
 </form>
 
 
-<script type="text/javascript">
-    $(document).ready(function(){
-      $('form input').change(function () {
-        var extension = this.files[0].name.split('.').pop().toLowerCase();
-        if(extension!="json"){
-            alert("json file only!");
-            location.reload();
-        }
-        $('form p').text((this.files[0].name)).addClass("selectedfiles");
-      });
-    }); 
-</script>
+
 
 <% include ./partials/footer %>

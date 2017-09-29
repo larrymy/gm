@@ -27,7 +27,9 @@ router.get("/login", function(req,res){
 router.get("/admin_orders", function(req,res){
 
 	Upload.findOne().sort({date_created:-1}).exec(function(err,post){
-
+		if(!post){
+			res.redirect("/admin_upload_json");
+		}
 		var fs=require('fs');
 		var data=fs.readFileSync(post.path);
 		var words=JSON.parse(data);
