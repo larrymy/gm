@@ -45,7 +45,9 @@
         <% order.products.forEach(function(prod){%>
             <%  
             var start = new Date();start.setHours(0,0,0,0); var end = new Date(); end.setHours(23,59,59,999); 
-            var ord_d = order.order_date.setTime(order.order_date.getTime() + (8*60*60*1000)); 
+            // var ord_d = order.order_date.setTime(order.order_date.getTime() + (8*60*60*1000)); 
+            var ord_d = order.order_date.setTime(order.order_date.getTime() + (0*60*60*1000)); 
+
             if( ord_d >= start && ord_d < end){
             %>
                 <tr class="success">
@@ -54,6 +56,7 @@
             <% } %>
                 <% loopcount = loopcount +1;%>
                 <td><%= loopcount %></td>
+                <td><%= (order.order_date)%></td>
                 <td><%= moment.utc(order.order_date)%></td>
                 <td><%= moment.parseZone(order.order_date)%></td>
                 <td><%= moment(order.order_date).format('llll') %></td>
