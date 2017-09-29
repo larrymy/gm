@@ -27,13 +27,16 @@
         <th>Total Items</th>
         <th>Total Unique Products</th>
     </tr>
+    <% var start = moment.utc().startOf('day'); var end = moment.utc().startOf('day').add(1, 'days'); var noww = moment.utc();%>
+    <p>start <%= start %></p>
+    <p>end <%= end %></p>
+    <p>now <%= noww %></p>
 
     <%var loopcount = 0;%>
 
     <% orders.forEach(function(order){%>
         <% order.products.forEach(function(prod){%>
             <% var order_d = moment.utc(order.order_date).add(479, 'minutes'); 
-            var start = moment.utc().startOf('day'); var end = moment.utc().startOf('day').add(1, 'days');
                 if(   order_d >= start && order_d < end   ) { %>
                 <tr class="success">
             <% }else{ %>
