@@ -27,7 +27,7 @@
         <th>Total Items</th>
         <th>Total Unique Products</th>
     </tr>
-    <% var start = moment.utc().startOf('day'); var end = moment.utc().startOf('day').add(1, 'days'); var noww = moment.utc();%>
+    <% var noww = moment.utc().add(8, 'hours'); var start = noww.startOf('day'); var end = noww.add(1, 'days'); %>
     <% var start2 = moment.parseZone().startOf('day'); var end2 = moment.parseZone().startOf('day').add(1, 'days'); var noww2 = moment.parseZone();%>
     <p>start <%= start %></p>
     <p>end <%= end %></p>
