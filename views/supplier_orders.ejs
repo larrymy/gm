@@ -13,7 +13,7 @@
         <th>Customer Name</th>
         <!-- <th>Email</th> -->
         <th>Phone</th>
-        <th>Address</th>
+        <!-- <th>Address</th> -->
         <!-- <th>Postcode</th> -->
         <th>Line_ID</th>
         <th>Category</th>
@@ -31,9 +31,13 @@
     <% orders.forEach(function(order){%>
         <% order.products.forEach(function(prod){%>
             <% if(prod.category.match(supp.name)){ %>
-                <% var order_d = moment.utc(order.order_date).add(479, 'minutes'); 
-                    var start = moment.utc().startOf('day'); var end = moment.utc().startOf('day').add(1, 'days');
-                if(   order_d >= start && order_d < end   ) { %>
+               <%  
+                var start = new Date();start.setHours(0,0,0,0); var end = new Date(); end.setHours(23,59,59,999); 
+                var ord_d = new Date(); ord_d.setTime(order.order_date); 
+                ord_d.setTime(ord_d.getTime() + (8*60*60*1000));
+
+                if( ord_d >= start && ord_d < end){
+                %>
                     <tr class="success">
                 <% }else{ %>
                     <tr>
@@ -45,7 +49,7 @@
                     <td><%= order.billing_full_name %></td>
                     <!-- <td><%= order.billing_email %></td> -->
                     <td><%= order.billing_phone %></td>
-                    <td><%= order.billing_address_1 %></td>
+                    <!-- <td><%= order.billing_address_1 %></td> -->
                     <!-- <td><%= order.billing_postcode %></td> -->
 
                     <td><%= prod.line_id %></td>
