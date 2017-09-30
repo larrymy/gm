@@ -23,6 +23,7 @@ var orderrSchema = new mongoose.Schema(
 		// billing_last_name: String,
 		billing_full_name: String,
 		billing_address_1: String,
+		billing_address_2: String,
 		billing_postcode: String,
 		billing_email: String,
 		billing_phone: String,

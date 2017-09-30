@@ -1,7 +1,7 @@
 <% include partials/header %>
 
 <div class="page-header">
-  <h1>ORDERS (ADMIN)</h1>
+  <h1>ORDERS <strong>(DRIVER)</strong></h1>
 </div>
 
 <style type="text/css">
@@ -34,8 +34,8 @@
                 // var a = _.uniq(data[9]);
                 // alert(data[9].indexOf(supplier[1]));
                 for(var k in supplier){
-                    if(data[8].indexOf(supplier[k]) !==-1){
-                            $('td', row).eq(8).css('background-color', colorr[k]);
+                    if(data[7].indexOf(supplier[k]) !==-1){
+                            $('td', row).eq(7).css('background-color', colorr[k]);
                     };
                 }
                 for(var k in address){
@@ -59,7 +59,7 @@
         <th>Date</th>
         
         <th>Customer Name</th>
-        <th>Email</th>
+        <!-- <th>Email</th> -->
         <th>Phone</th>
         <th>Address</th>
         <!-- <th>Postcode</th> -->
@@ -98,7 +98,7 @@
                 <td><%= moment(order.order_date).format('YYYY/MM/DD HH:mm') %></td>
 
                 <td><%= order.billing_full_name %></td>
-                <td><%= order.billing_email %></td>
+                <!-- <td><%= order.billing_email %></td> -->
                 <td><%= order.billing_phone %></td>
                 <td><%= order.billing_address_2 %></td>
                 <!-- <td><%= order.billing_postcode %></td> -->
