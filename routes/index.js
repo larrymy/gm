@@ -34,7 +34,7 @@ router.get("/admin_orders", function(req,res){
 		}
 		
 		Order.find({}).sort({order_date: -1}).exec(function(err,data2){
-			res.render("admin_orders.ejs", {orders: data2, moment: moment});
+			res.render("admin_orders_3.ejs", {orders: data2, moment: moment});
 		})	
 		
 	})
