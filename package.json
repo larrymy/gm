@@ -27,7 +27,6 @@
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^3.1.0",
-    "underscore": "^1.8.3",
     "woocommerce-api": "^1.4.2",
     "xmlhttprequest": "^1.8.0"
   }
