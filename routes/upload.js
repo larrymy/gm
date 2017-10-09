@@ -4,7 +4,7 @@ var Ord = require("../models/order.js");
 
 module.exports = function(app){
 	var multer = require("multer");
-	var upload = multer({dest: __dirname+"/uploads"});
+	var upload = multer({dest: "../uploads"});
 
 	app.post("/uploads", upload.single('myfile'), uploadFile);
 

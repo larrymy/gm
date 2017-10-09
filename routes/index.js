@@ -70,7 +70,7 @@ router.get("/admin_summary/:id", middleware.isLoggedIn, function(req,res){
 			res.redirect("/admin_upload_json");
 		}
 			
-		var data = fs.readFileSync(post.path);
+		var data = fs.readFileSync("./uploads/"+post.filename);
 		console.log(data);
 		var order_data = JSON.parse(data);
 		res.render("summary.ejs", {orders: order_data, _:_, moment: moment});
