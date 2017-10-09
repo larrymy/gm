@@ -1,0 +1,272 @@
+<% include partials/header %>
+
+<div class="page-header">
+  <h1>DAILY SUMMARY (ADMIN)</h1>
+</div>
+
+<style type="text/css">
+    .highlight{
+        color: blue;
+    }
+
+</style>
+<!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script> -->
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#summary1table').DataTable({
+        })
+    })
+
+    $(document).ready(function() {
+        $('#summary2table').DataTable({
+        })
+    })
+    $(document).ready(function() {
+        $('#summary3table').DataTable({
+        })
+    })
+
+    $(document).ready(function() {
+        $('#missiontable').DataTable({
+            lengthMenu: [
+                [ 25, 50, 100, -1 ],
+                [ '25', '50', '100', 'Show all' ]
+            ],
+            "createdRow": function ( row, data, index ) {
+                // var colorr = [rgb(241, 169, 160), rgb(82, 179, 217), rgb(78,205,196), rgb(244, 179, 80)];
+                var colorr = ['#E08283', '#6BB9F0', '#03C9A9', '#F4B350'];
+                var address = [];
+                var H = JSON.stringify(data[6])
+                // alert(H)
+                for(n in H){
+                    // alert(H[n])
+                  if(!address.indexOf(H[n])){a
+                     address.push(H[n]);
+                  }
+                }
+                var supplier = ['Lim Fried Chicken', 'Pontian Noodle', 'Meet Mee', 'Mr Rice Corner']
+                // var a = _.uniq(data[9]);
+                // alert(data[9].indexOf(supplier[1]));
+                for(var k in supplier){
+                    if(data[8].indexOf(supplier[k]) !==-1){
+                            $('td', row).eq(8).css('background-color', colorr[k]);
+                    };
+                }
+                for(var k in address){
+                    if(data[6].indexOf(address[k]) !==-1){
+                            $('td', row).eq(6).css('background-color', colorr[k]);
+                    };
+                }
+            },
+            "pagingType": "full_numbers"
+            // show:  50,
+            // paging: false;
+        });
+    } );
+</script>    
+
+
+<%
+    // var od = _.where(orders, {order_number: "26396"});
+    // var fname = _.pluck(od, 'billing_full_name');
+    // var dd = _.groupBy(orders, function(num){ return num.order_date; });
+    // var dd2 = _.map({one: 1, two: 2, three: 3}, function(num, key){ return num * 3; });
+    var sales_by_date = _.chain(orders)
+            .map(function(item){ 
+                var order_date = new Date(item.order_date.toDateString());
+                var prod = item.products
+                var prod2 = _(prod).reduce(function(m,x) { return m + x.item_price*x.qty; }, 0);
+                return {date: order_date, total: prod2}; 
+            })
+            .groupBy('date')
+            .map(function (value,key) { 
+                            var reduceVal = _.reduce(value, function (acc, val)
+                                                            { 
+                                                                return acc + val.total;
+                                                            },0 ); 
+                            return {'date':key,'total' :reduceVal};
+                })
+            .value();
+
+    var supplier = ['Lim Fried Chicken', 'Pontian Noodle', 'Meet Mee', 'Mr Rice Corner'];
+
+    var sales_by_supplier = _.chain(orders)
+                        .map(function(item){
+                            var pd = item.products;
+                            return pd
+                        })
+                        .flatten()
+                        .map(function(item2){
+                            var std_category = _.find(supplier, function(supp){ return item2.category.indexOf(supp) !==-1});
+                            item2.category = std_category;
+                            var tprice = item2.item_price*item2.qty;
+                            return {'supplier': item2.category, 'total': tprice, 'date': item2.date};
+                        })
+                        .groupBy('supplier')
+                        .map(function(value, key){
+                            var reduceVal = _.reduce(value, function (acc, val)
+                                                        { 
+                                                            return acc + val.total;
+                                                        },0 ); 
+                            return {'supplier':key,'total' :reduceVal};
+                        })
+
+    var sales_by_collection = _.chain(orders)
+            .map(function(item){ 
+                var order_date = new Date(item.order_date.toDateString());
+                var collection_point = item.billing_address_2.split("_")[0];
+                var prod = item.products
+                var prod2 = _(prod).reduce(function(m,x) { return m + x.item_price*x.qty; }, 0);
+                return {collection_point: collection_point, total: prod2}; 
+            })
+            .groupBy('collection_point')
+            .map(function (value,key) { 
+                            var reduceVal = _.reduce(value, function (acc, val)
+                                                            { 
+                                                                return acc + val.total;
+                                                            },0 ); 
+                            return {'collection_point':key,'total' :reduceVal};
+                })
+            .value();
+
+
+%>    
+
+<p><%= //JSON.stringify(sales_by_supplier) %>
+    </p>
+<!-- SUMMARY TABLE -->
+<div class="row">
+    <div class="col-md-4">
+        <h3>By Date</h3>
+        <table id="summary1table" class="table table-striped table-bordered nowrap">
+            <thead>
+                <th>Date</th>
+                <th>Total Sales</th>
+            </thead>   
+            <tbody>
+            <% sales_by_date.forEach(function(sale){%>
+                <tr>
+                    <td><%=moment(sale.date).format("dd, YYYY/MM/DD")%></td>
+                    <td><%=sale.total.toFixed(2);%></td>
+                </tr>  
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        <h3>By Supplier</h3>
+        <table id="summary2table" class="table table-striped table-bordered nowrap">
+            <thead>
+                <th>Supplier</th>
+                <th>Total Sales</th>
+            </thead>   
+            <tbody>
+            <% sales_by_supplier.forEach(function(sale){%>
+                <tr>
+                    <td><%=sale.supplier%></td>
+                    <td><%=sale.total.toFixed(2);%></td>
+                </tr>  
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <h3>By Collection Point</h3>
+        <table id="summary3table" class="table table-striped table-bordered nowrap">
+            <thead>
+                <th>Supplier</th>
+                <th>Total Sales</th>
+            </thead>   
+            <tbody>
+            <% sales_by_collection.forEach(function(sale){%>
+                <tr>
+                    <td><%=sale.collection_point%></td>
+                    <td><%=sale.total.toFixed(2);%></td>
+                </tr>  
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+   
+<div class="row table-responsive">
+    <div class="col-md-12">
+        <h2>All Orders from the latest JSON</h2>
+        <table id="missiontable" class="table table-striped table-bordered nowrap">
+            <thead>
+                <th>#</th>
+                <th>Order ID</th>
+                <th>Date</th>
+                
+                <th>Customer Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <!-- <th>Postcode</th> -->
+                <th>Line_ID</th>
+                <th>Category</th>
+                <th>Food Name</th>
+                <th>Variations</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Customer Note</th>
+                <th>Total (Order)</th>
+                <th>Total Items</th>
+                <th>Total Unique Products</th>
+            </thead>
+            <tbody>
+
+            <%var loopcount = 0;%>
+
+            <% orders.forEach(function(order){%>
+                <% order.products.forEach(function(prod){%>
+                    <%  
+                    var start = new Date();start.setHours(0,0,0,0); var end = new Date(); end.setHours(23,59,59,999); 
+                    var ord_d = new Date(); ord_d.setTime(order.order_date); 
+                    ord_d.setTime(ord_d.getTime() + (8*60*60*1000));
+
+                    if( ord_d >= start && ord_d < end){
+                    %>
+                        <tr style="background:rgb(207, 237, 184)">
+                    <% }else{ %>
+                        <tr>
+                    <% } %>
+                        <% loopcount = loopcount +1;%>
+                        <td><%= loopcount %></td>
+                        <td><%= (order.order_number)%></td>
+                        <td><%= moment(order.order_date).format('YYYY/MM/DD HH:mm') %></td>
+
+                        <td><%= order.billing_full_name %></td>
+                        <td><%= order.billing_email %></td>
+                        <td><%= order.billing_phone %></td>
+                        <td><%= order.billing_address_2 %></td>
+                        <!-- <td><%= order.billing_postcode %></td> -->
+
+                        <td><%= prod.line_id %></td>
+                        <td><%= prod.category %></td>
+                        <td><%= prod.name %></td>
+                        <td><%= prod.product_variation %></td>
+                        <td><%= prod.qty %></td>
+                        <td><%= prod.item_price %></td>
+                        <td><%= prod.qty*prod.item_price %></td>
+                        
+                        <td><%= order.customer_note %></td>
+                        <td><%= order.order_total %></td>
+                        <td><%= order.count_total_items %></td>
+                        <td><%= order.count_unique_products %> </td>        
+                    </tr>    
+                <%})%>
+            <%})%>
+            </tbody>
+        </table>
+    </div>
+</div>    
+
+</body>
+</html>

@@ -19,7 +19,7 @@
     
     <% uploads.sort(function(a,b){return new Date(b.date_created) - new Date(a.date_created)}).forEach(function(up){ %>
         <tr>
-            <td><%=up.originalname %></td>
+            <td><a href="/admin_summary/<%=up._id%>"><%=up.originalname %></a></td>
             <td><%=up.filename %></td>
             
             <td><%=up.extension %></td>
@@ -29,6 +29,7 @@
 
             <% var qname = moment(up.date_created).format('YYYYMMDD') + "_" + up.originalname;
                 var path2 = "file:" + up.path %>
+            <td><a href="./uploads/<%=up.filename%>" download=>Download</a>​​​​​​​​​​​​​​​​​​​​​​​​​​​</td>
             <!-- <td><a href="./uploads/<%=up.filename%>" download="<%= up.originalname %>">Download</a>​​​​​​​​​​​​​​​​​​​​​​​​​​​</td> -->
             <!-- <td><a href=<%=path2%> download="<%= qname %>">Download</a>​​​​​​​​​​​​​​​​​​​​​​​​​​​</td> -->
             <!-- <td><a href="/uploads/id">View</a></td> destroy-->

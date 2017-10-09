@@ -11,7 +11,9 @@ var Order = require("../models/order.js");
 var middleware = require("../middleware");
 var moment = require("moment");
 var async = require("async");
-flash       = require("connect-flash");
+var flash = require("connect-flash");
+var _ = require("underscore");
+var fs=require('fs');
 
 
 router.get("/", function(req,res){
@@ -58,6 +60,24 @@ router.get("/admin_orders", middleware.isLoggedIn, function(req,res){
 		
 	})
 })
+
+//Summary route
+router.get("/admin_summary/:id", middleware.isLoggedIn, function(req,res){
+
+	Upload.findById(req.params.id).exec(function(err,post){
+		if(!post){
+			req.flash("failure", "File not found!");
+			res.redirect("/admin_upload_json");
+		}
+			
+		var data = fs.readFileSync(post.path);
+		console.log(data);
+		var order_data = JSON.parse(data);
+		res.render("summary.ejs", {orders: order_data, _:_, moment: moment});
+	})
+			
+})
+
 
 router.get("/driver/a20b17", function(req,res){
 
