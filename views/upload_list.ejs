@@ -14,6 +14,8 @@
         <th>Date Created</th>  
         <th>Start Date</th>
         <th>End Date</th>
+        <th>Path</th>
+        <th>Download</th>
         <!-- <th>Path</th>   -->
         <!-- <th>Delete</th>     -->
     </tr>
@@ -29,11 +31,19 @@
             <td><%=up.date_created %></td>
             <td><%=up.start_date %></td>
             <td><%=up.end_date %></td>
+
+
+            <td><%=up.path %></td>
+            
+            <td><a href="/upload/<%=up._id%>/download">Download</a></td>
+            <!-- <td><a href="<%=up.path %>" id="dld" download>Download</a></td> -->
+            <!-- <td><a href="../routes/uploads/<%=up.filename%>" download="<%= up.originalname %>">Download</a>​​​​​​​​​​​​​​​​​​​​​​​​​​​</td> -->
+
             <!-- <td><a href="<%=up.path %>">View</a></td> -->
 
             <% var qname = moment(up.date_created).format('YYYYMMDD') + "_" + up.originalname;
                 var path2 = "file:" + up.path %>
-            <!-- <td><a href="./uploads/<%=up.filename%>" download="<%= up.originalname %>">Download</a>​​​​​​​​​​​​​​​​​​​​​​​​​​​</td> -->
+            
             <!-- <td><a href=<%=path2%> download="<%= qname %>">Download</a>​​​​​​​​​​​​​​​​​​​​​​​​​​​</td> -->
             <!-- <td><a href="/uploads/id">View</a></td> destroy-->
         </tr>

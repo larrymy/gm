@@ -39,6 +39,22 @@ router.get("/logout", function(req, res){
     res.redirect("/");
 });
 
+//Download
+router.get('/upload/:id/download', function(req, res){
+	Upload.findById(req.params.id, function(err,post){
+		if(err || !post){
+			req.flash("error", "Can't find this JSON on the server!");
+			res.redirect("/admin_upload_json");
+		}else{
+			console.log(post.originalname);
+			  // var file = __dirname + '/upload-folder/dramaticpenguin.MOV';
+			  var filepath = post.path;
+			  var filename = post.originalname; //post.originalname
+ 			  res.download(filepath, filename); // Set disposition and send it.
+		}
+	})
+
+});
 
 
 router.get("/admin_upload_json", middleware.isLoggedIn, function(req, res){
