@@ -4,12 +4,19 @@
   <h1>Supplier List (ADMIN) </h1>
 </div>
 
+<form class="container-fluid" action="supplier/new" method="POST">
+      <div class="form-group col-md-4">
+        <input type="text" class="form-control " id="name" placeholder="Add a new supplier, e.g. Lim Fried Chicken" name="name" required>
+      </div>
+      <button type="submit" class="btn btn-success col-md-1">Submit</button>
+</form>
 
-
+<div class='container-fluid'>
 <table class="table table-bordered">
     <tr>
         <th>Supplier Name</th>
         <th>Supplier ID</th>
+        <th>Delete</th>
     </tr>
 
 
@@ -17,10 +24,42 @@
 
         <tr>
             <td><a " href="/supplier/<%= supp._id %>"><%= supp.name %></a></td>
-            <td><a " href="/supplier/<%= supp._id %>"><%= supp._id %></a></td>        
+            <td><a " href="/supplier/<%= supp._id %>"><%= supp._id %></a></td>     
+            <td>
+                <button type="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModal">Delete</button>
+              
+                <!-- Modal -->
+                <div id="myModal" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Delete Confirmation</h4>
+                      </div>
+                      <div class="modal-body">
+                        <p>Warning, supplier may lose access to the orders! Confirm DELETE?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <form id="delete-form" action="/supplier/<%=supp._id %>?_method=DELETE" method="POST">
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        </form>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>   
+
+            </td>
+
         </tr>
 
     <% }) %>
 </table>
+</div>
+
+
 
 <% include ./partials/footer %>

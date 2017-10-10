@@ -49,12 +49,36 @@ router.get("/admin_orders", middleware.isLoggedIn, function(req,res){
 
 	Upload.findOne().sort({date_created:-1}).exec(function(err,post){
 		if(!post){
+			req.flash("error", "No JSON file was found!");
 			res.redirect("/admin_upload_json");
 		}
 		
 		Order.find({}).sort({order_date: -1}).exec(function(err,data2){
 			res.render("admin_orders_3.ejs", {orders: data2, moment: moment});
 		})	
+		
+	})
+})
+
+router.get("/admin_summary/", middleware.isLoggedIn, function(req,res){
+
+	Upload.findOne().sort({date_created:-1}).exec(function(err,post){
+		if(err){
+			req.flash("error", "Please re-upload the JSON file!");
+			res.redirect("/admin_upload_json");
+		}
+
+		if(!post){
+			req.flash("error", "No JSON file was found!");
+			res.redirect("/admin_upload_json");
+		}else if(post.content){
+			var data2 = JSON.parse(post.content);
+			res.render("summary_2.ejs", {orders: data2, moment: moment, _:_});
+		}else{
+			req.flash("error", "Please re-upload the JSON file!");
+			res.redirect("/admin_upload_json");
+		}
+		
 		
 	})
 })
@@ -83,6 +107,7 @@ router.get("/driver/a20b17", function(req,res){
 
 	Upload.findOne().sort({date_created:-1}).exec(function(err,post){
 		if(!post){
+			req.flash("error", "No JSON file was found!");
 			res.redirect("/admin_upload_json");
 		}
 		
@@ -100,7 +125,6 @@ router.get("/admin_suppliers", middleware.isLoggedIn, function(req, res){
 })
 
 router.get("/supplier/:id", function(req, res){
-
 	Upload.findOne().sort({date_created:-1}).exec(function(err,post){
 		Supplier.findById(req.params.id, function(err, supp){
 			// console.log(supp);
@@ -110,6 +134,31 @@ router.get("/supplier/:id", function(req, res){
 		})	
 	})
 })
+
+router.post("/supplier/new", middleware.isLoggedIn,function(req, res){
+	var newSupplier = new Supplier({name: req.body.name});
+	Supplier.create(newSupplier, function(err, newSupp){
+		if(err){
+			console.log(err);
+			req.flash("error", "Something wrong!");
+			res.redirect("/admin_suppliers");
+		}else{
+			res.redirect("/admin_suppliers");
+		}
+	})
+})
+
+router.delete("/supplier/:id",middleware.isLoggedIn, function(req, res){
+   Supplier.findByIdAndRemove(req.params.id, function(err){
+      if(err){
+			console.log(err);
+			req.flash("error", "Something wrong!");
+          	res.redirect("/admin_suppliers");
+      } else {
+         	res.redirect("/admin_suppliers");
+      }
+   });
+});
 
 router.get("/admin_uploads", middleware.isLoggedIn, function(req,res){
 	Upload.find({}, function(err, ups){
@@ -122,7 +171,7 @@ router.get("/admin_uploads", middleware.isLoggedIn, function(req,res){
 //    res.render("register"); 
 // });
 
-// //handle sign up logic
+// handle sign up logic
 // router.post("/register", function(req, res){
 //     var newUser = new User({username: req.body.username});
 //     User.register(newUser, req.body.password, function(err, user){

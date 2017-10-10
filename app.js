@@ -6,25 +6,17 @@ var express     = require("express"),
     flash       = require("connect-flash"),
     LocalStrategy = require("passport-local"),
     methodOverride = require("method-override"),
-    // Campground  = require("./models/campground"),
     // Comment     = require("./models/comment"),
     User  = require("./models/user"),
     Order = require("./models/order");
-    // seedDB      = require("./seeds")
-    
+
 //requiring routes
 var orderRoutes    = require("./routes/index");
 
-    // campgroundRoutes = require("./routes/campgrounds"),
-    // indexRoutes      = require("./routes/index")
     
-// mongoose.connect("mongodb://localhost/yelp_camp_v10");
-// mongoose.connect("mongodb://junyitt:100stars@ds149144.mlab.com:49144/yelpcamp");
+var url = process.env.DATABASEURL || "mongodb://localhost/gastronomeal1"
 
-var url = process.env.DATABASEURL || "mongodb://localhost/gastronomeal1" || "mongodb://gm:gm123@ds149134.mlab.com:49134/gastronomeal1";
-// var url = process.env.DATABASEURL || "mongodb://gm:gm123@ds149134.mlab.com:49134/gastronomeal1";
-// var url = process.env.DATABASEURL || "mongodb://localhost/gastronomeal1" 
-console.log(url);
+console.log(url.substr(30,100));
 
 mongoose.connect(url);
 
