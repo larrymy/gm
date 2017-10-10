@@ -46,9 +46,10 @@ router.get('/upload/:id/download', function(req, res){
 			req.flash("error", "Can't find this JSON on the server!");
 			res.redirect("/admin_upload_json");
 		}else{
-			console.log(post.originalname);
+			// console.log(post.originalname);
 			  // var file = __dirname + '/upload-folder/dramaticpenguin.MOV';
-			  var filepath = post.path;
+			  // console.log(__dirname)
+			  var filepath = __dirname + "/uploads/" + post.filename;
 			  var filename = post.originalname; //post.originalname
  			  res.download(filepath, filename); // Set disposition and send it.
 		}
