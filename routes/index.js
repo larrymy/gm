@@ -48,7 +48,7 @@ router.get('/upload/:id/download', function(req, res){
 		}else{
 			// console.log(post.originalname);
 			  // var file = __dirname + '/upload-folder/dramaticpenguin.MOV';
-			  // console.log(__dirname)
+			  console.log(__dirname)
 			  var filepath = __dirname + "/uploads/" + post.filename;
 			  var filename = post.originalname; //post.originalname
  			  res.download(filepath, filename); // Set disposition and send it.
