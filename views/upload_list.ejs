@@ -12,19 +12,23 @@
         <th>Extension</th>
         <th>Size</th>
         <th>Date Created</th>  
-        <th>Path</th>  
+        <th>Start Date</th>
+        <th>End Date</th>
+        <!-- <th>Path</th>   -->
         <!-- <th>Delete</th>     -->
     </tr>
 
     
     <% uploads.sort(function(a,b){return new Date(b.date_created) - new Date(a.date_created)}).forEach(function(up){ %>
         <tr>
-            <td><%=up.originalname %></td>
+            <td><a href="/admin_summary/<%=up._id%>"><%=up.originalname %></a></td>
             <td><%=up.filename %></td>
             
             <td><%=up.extension %></td>
             <td><%=up.size_readable %></td>
             <td><%=up.date_created %></td>
+            <td><%=up.start_date %></td>
+            <td><%=up.end_date %></td>
             <!-- <td><a href="<%=up.path %>">View</a></td> -->
 
             <% var qname = moment(up.date_created).format('YYYYMMDD') + "_" + up.originalname;

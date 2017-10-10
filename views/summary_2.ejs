@@ -1,0 +1,163 @@
+<% include partials/header %>
+
+<style type="text/css">
+	.right{
+		text-align: right;
+	}
+
+</style>
+<%
+    var sales_by_date = _.chain(orders)
+            .map(function(item){ 
+            	var date2 = moment(item.order_date).format('YYYY-MM-DD');
+            	var date = new Date(String(date2));
+                // var date = new Date(moment(item.order_date).toDateString());
+                var prod = item.products
+                var prod2 = _(prod).reduce(function(m,x) { return m + x.item_price*x.qty; }, 0);
+                return {date: date, total: prod2}; 
+            })
+            .groupBy('date')
+            .map(function (value,key) { 
+                            var reduceVal = _.reduce(value, function (acc, val)
+                                                            { 
+                                                                return acc + val.total;
+                                                            },0 ); 
+                            return {'date':key,'total' :reduceVal};
+                })
+            .value();
+  	
+  	var supplier = ['Lim Fried Chicken', 'Pontian Noodle', 'Meet Mee', 'Mr Rice Corner'];
+    var sales_by_supplier = _.chain(orders)
+                    .map(function(item){
+                        var pd = item.products;
+                        return pd
+                    })
+                    .flatten()
+                    .map(function(item2){
+                        var std_category = _.find(supplier, function(supp){ return item2.category.indexOf(supp) !==-1});
+                        item2.category = std_category;
+                        var tprice = item2.item_price*item2.qty;
+                        return {'supplier': item2.category, 'total': tprice, 'date': item2.date};
+                    })
+                    .groupBy('supplier')
+                    .map(function(value, key){
+                        var reduceVal = _.reduce(value, function (acc, val)
+                                                    { 
+                                                        return acc + val.total;
+                                                    },0 ); 
+                        return {'supplier':key,'total' :reduceVal};
+                    })
+	var sales_by_collection = _.chain(orders)
+		    .map(function(item){ 
+		    	var date2 = moment(item.order_date).format('YYYY-MM-DD');
+		        var order_date = new Date(String(date2));
+		        var collection_point = item.billing_address_2.split("_")[0];
+		        var prod = item.products
+		        var prod2 = _(prod).reduce(function(m,x) { return m + x.item_price*x.qty; }, 0);
+		        return {collection_point: collection_point, total: prod2}; 
+		    })
+		    .groupBy('collection_point')
+		    .map(function (value,key) { 
+		                    var reduceVal = _.reduce(value, function (acc, val)
+		                                                    { 
+		                                                        return acc + val.total;
+		                                                    },0 ); 
+		                    return {'collection_point':key,'total' :reduceVal};
+		        })
+		    .value();
+
+		    var min_date = _.chain(orders)
+                    .map(function(item){
+                        var date2 = moment(item.order_date).format('YYYY-MM-DD');
+		        		var order_date = new Date(String(date2));
+                        return order_date
+                    })
+		    		.min();
+		    var min_date = new Date(min_date)
+
+		    var max_date = _.chain(orders)
+                    .map(function(item){
+                        var date2 = moment(item.order_date).format('YYYY-MM-DD');
+		        		var order_date = new Date(String(date2));
+                        return order_date
+                    })
+		    		.max();
+		    var max_date = new Date(max_date)
+
+	var total_sales = _.chain(sales_by_date)
+						.pluck('total')
+						.reduce(function (acc, val)
+                                            { 
+                                                return acc + val;
+                                            },0 )
+	var total_sales = Number(total_sales).toFixed(2);
+
+
+%>
+
+<div class="page-header">
+  <h1>DAILY SUMMARY (ADMIN)</h1>
+  <h2><%=moment(min_date).format('YYYY-MM-DD')%> to <%=moment(max_date).format('YYYY-MM-DD')%></h2>
+  <h3>Total Sales: <%= total_sales%></h3>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h3>By Date </h3>
+        <table id="summary1table" class="table table-striped table-bordered nowrap">
+            <thead>
+                <th>Date</th>
+                <th>Total Sales</th>
+            </thead>   
+            <tbody>
+            <% sales_by_date.forEach(function(sale){%>
+                <tr>
+                    <td><%=moment(sale.date).format("dd, YYYY/MM/DD")%></td>
+                    <td class="right"><%=sale.total.toFixed(2);%></td>
+                </tr>  
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        <h3>By Supplier</h3>
+        <table id="summary2table" class="table table-striped table-bordered nowrap">
+            <thead>
+                <th>Supplier</th>
+                <th>Total Sales</th>
+            </thead>   
+            <tbody>
+            <% sales_by_supplier.forEach(function(sale){%>
+                <tr>
+                    <td><%=sale.supplier%></td>
+                    <td class="right"><%=sale.total.toFixed(2);%></td>
+                </tr>  
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <h3>By Collection Point</h3>
+        <table id="summary3table" class="table table-striped table-bordered nowrap">
+            <thead>
+                <th>Collection Point</th>
+                <th>Total Sales</th>
+            </thead>   
+            <tbody>
+            <% sales_by_collection.forEach(function(sale){%>
+                <tr>
+                    <td><%=sale.collection_point%></td>
+                    <td class="right"><%=sale.total.toFixed(2);%></td>
+                </tr>  
+            <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+ </body>
+ </html>

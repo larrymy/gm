@@ -11,8 +11,8 @@ var Order = require("../models/order.js");
 var middleware = require("../middleware");
 var moment = require("moment");
 var async = require("async");
-flash       = require("connect-flash");
-
+var flash = require("connect-flash");
+var _ = require("underscore");
 
 router.get("/", function(req,res){
 	res.redirect("/admin_upload_json");
@@ -55,6 +55,26 @@ router.get("/admin_orders", middleware.isLoggedIn, function(req,res){
 		Order.find({}).sort({order_date: -1}).exec(function(err,data2){
 			res.render("admin_orders_3.ejs", {orders: data2, moment: moment});
 		})	
+		
+	})
+})
+
+router.get("/admin_summary/:id", middleware.isLoggedIn, function(req,res){
+
+	Upload.findById(req.params.id, function(err,post){
+		if(err){
+			req.flash("error", "Please re-upload the JSON file!");
+			res.redirect("/admin_upload_json");
+		}
+
+		if(post.content){
+			var data2 = JSON.parse(post.content);
+			res.render("summary_2.ejs", {orders: data2, moment: moment, _:_});
+		}else{
+			req.flash("error", "Please re-upload the JSON file!");
+			res.redirect("/admin_upload_json");
+		}
+		
 		
 	})
 })

@@ -1,6 +1,8 @@
 var mongoose = require("mongoose");
 var Upload = require("../models/upload.js");
 var Ord = require("../models/order.js");
+var _ = require("underscore");
+var moment = require("moment");
 
 module.exports = function(app){
 	var multer = require("multer");
@@ -39,7 +41,28 @@ module.exports = function(app){
 	
 		var fs=require('fs');
 		var data=fs.readFileSync(myfile.path);
+
+		myfile.content = data;
+
 		var order_data=JSON.parse(data);
+
+		    var min_date = _.chain(order_data)
+                    .map(function(item){
+                        var date2 = moment(item.order_date).format('YYYY-MM-DD');
+		        		var order_date = new Date(String(date2));
+                        return order_date
+                    })
+		    		.min();
+		    var max_date = _.chain(order_data)
+                    .map(function(item){
+                        var date2 = moment(item.order_date).format('YYYY-MM-DD');
+		        		var order_date = new Date(String(date2));
+                        return order_date
+                    })
+		    		.max();
+		myfile.start_date = min_date;
+		myfile.end_date = max_date;
+
 		// res.send(order_data);
 		Ord.find({}).remove().exec(function(err,done){});
 
